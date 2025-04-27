@@ -1,0 +1,103 @@
+# Cookie-Bite: Bypassing Azure MFA via Chrome Extension & Session Replay
+
+This project is inspired by Varonis' original Cookie-Bite article, expanding on the concept by automating session replay and attempting to bypass geolocation detections. It demonstrates how browser extensions can be weaponized to steal Microsoft Azure authentication cookies, exfiltrate them silently via a Google Form, and replay the session using Puppeteer and TokenSmith — effectively bypassing MFA and many behavioral security controls.
+
+---
+
+## Project Structure
+
+mslogin_cookie_extension/ ├── background.js ├── manifest.json └── popup.html replay_to_browser_session.js replay_to_token.js install.sh session_dump.json (created after stealing cookies)
+
+
+---
+
+## ⚙️ Dependencies
+
+Make sure you have the following installed on your MacBook:
+
+- [Google Chrome](https://www.google.com/chrome/)
+- [Node.js](https://nodejs.org/) (v18.x or newer recommended)
+- [npm](https://www.npmjs.com/) (comes with Node)
+- [Puppeteer](https://pptr.dev/) (`npm install puppeteer`)
+- [TokenSmith](https://github.com/gladstomychaos/tokensmith) (must be in your system PATH)
+- [Python 3](https://www.python.org/) and [ROADtools](https://github.com/dirkjanm/ROADtools) (`pip install roadtools`)
+
+Optional helper:
+- [jq](https://stedolan.github.io/jq/) for easy JSON parsing (`brew install jq`)
+
+---
+
+## Setup & Usage
+
+### 1. Setup the Exfiltration Endpoint
+
+- Create a **Google Form** with a short answer field (label it "Log Info").
+- Capture the **form POST URL** and **entry ID** using Chrome DevTools.
+
+### 2. Configure the Chrome Extension
+
+- Edit `background.js` to replace:
+  - `<FORM-ID>` in the `fetch` URL
+  - `<entry.XXXXXXXXXX>` with your Google Form's entry field ID.
+- Load the `mslogin_cookie_extension/` as an unpacked extension in Chrome (Developer Mode).
+- Visit [portal.azure.com](https://portal.azure.com) — the extension will intercept session cookies silently.
+
+On a mac, launch the extension automatically with:
+
+```bash
+./install.sh
+```
+
+### 3. Replay Stolen Session to Browser
+After receiving the stolen session data:
+
+Save the payload to a file called session_dump.json.
+
+Run:
+```bash
+node replay_to_browser_session.js
+```
+This will open a Chrome incognito window logged into the victim's Azure session.
+
+### 4. Replay Session to Extract Azure Tokens
+Make sure tokensmith is executable and installed in your system PATH.
+
+Run:
+``` bash
+node replay_to_token.js
+```
+This script uses TokenSmith and Puppeteer to request Azure OAuth tokens (Access Token + Refresh Token) using the victim session.
+
+Tokens will be saved automatically in a tokens_output_<timestamp>.json file.
+
+### 5. (Optional) Map the Azure Tenant with RoadRECON
+If you extracted access tokens:
+``` bash
+roadrecon auth --access-token <your_access_token>
+roadrecon gather
+roadrecon gui
+```
+Browse to http://127.0.0.1:5000 to view users, groups, apps, and relationships in the Azure tenant.
+
+--- 
+
+### Summary
+Key Concepts Demonstrated
+- MFA bypass without needing user credentials.
+- Session hijacking through browser extension abuse.
+- Bypassing geolocation restrictions by spoofing user-agent and coordinates.
+- OAuth token extraction using stolen cookies.
+- Tenant mapping via API after stealing tokens.
+
+Recommendations for Defense
+- Enforce managed browser policies.
+- Disable or restrict Chrome Developer Mode where possible.
+- Monitor login anomalies (IP + location mismatch).
+- Require device trust validation via Conditional Access Policies.
+- Educate users about the risks of installing unknown or unpacked extensions.
+
+⚠️ Legal Disclaimer
+This project is intended for educational and authorized testing purposes only.
+Unauthorized access to computer systems is illegal.
+
+Use responsibly.
