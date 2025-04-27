@@ -6,7 +6,7 @@ USER_DIR="/tmp/chrome-temp-profile-$$"
 
 # Sanity check
 if [ ! -f "$EXT_DIR/manifest.json" ] || [ ! -f "$EXT_DIR/background.js" ]; then
-  echo "❌ Missing manifest.json or background.js in $EXT_DIR"
+  echo "Missing manifest.json or background.js in $EXT_DIR"
   exit 1
 fi
 
@@ -20,5 +20,5 @@ open -na "Google Chrome" --args \
   --disable-default-apps \
   --new-window "https://login.microsoftonline.com"
 
-echo "✅ Chrome launched cleanly with extension loaded."
+echo "Chrome launched cleanly with extension loaded."
 
