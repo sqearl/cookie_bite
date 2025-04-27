@@ -4,13 +4,6 @@ This project is inspired by Varonis' original Cookie-Bite article, expanding on 
 
 ---
 
-## Project Structure
-
-mslogin_cookie_extension/ ├── background.js ├── manifest.json └── popup.html replay_to_browser_session.js replay_to_token.js install.sh session_dump.json (created after stealing cookies)
-
-
----
-
 ## ⚙️ Dependencies
 
 Make sure you have the following installed on your MacBook:
