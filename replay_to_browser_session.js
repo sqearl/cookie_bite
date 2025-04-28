@@ -19,6 +19,23 @@ const fs = require('fs');
     'Accept-Language': sessionData.language || 'en-US,en;q=0.9'
   });
 
+  // Grant geolocation permission for Microsoft login site
+  await browser.defaultBrowserContext().overridePermissions(
+    "https://login.microsoftonline.com",
+    ["geolocation"]
+  );
+
+  // Set geolocation if coordinates are present
+  if (sessionData.coordinates && sessionData.coordinates.latitude && sessionData.coordinates.longitude) {
+    await page.setGeolocation({
+      latitude: sessionData.coordinates.latitude,
+      longitude: sessionData.coordinates.longitude
+    });
+    console.log(`Geolocation set to lat: ${sessionData.coordinates.latitude}, lon: ${sessionData.coordinates.longitude}`);
+  } else {
+    console.log('No geolocation coordinates provided in session_dump.json.');
+  }
+
   // Set cookies
   await page.setCookie(...sessionData.cookies);
 
@@ -27,4 +44,3 @@ const fs = require('fs');
 
   console.log("Replay session started in incognito window.");
 })();
-
