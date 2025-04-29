@@ -64,7 +64,36 @@ The original captured session info (IP, city, country, User-Agent, Language)
 Your current machine’s public IP and location (using ipinfo.io)
 It then asks what modifications you'd like to make before proceeding to session replay.
 
-- By spoofing attributes like language, geolocation, and user-agent, you can test how Azure Conditional Access Policies and security monitoring tools respond to various anomaly conditions.
+By spoofing attributes like language, geolocation, and user-agent, you can test how Azure Conditional Access Policies and security monitoring tools respond to various anomaly conditions.
+
+```bash
+IP Address: 73.14.194.136
+City: Denver
+Region/State: Colorado
+Country: United States
+Latitude: 39.7394
+Longitude: -104.9836
+Language: en-US
+
+--- Your Current Info ---
+IP Address: 73.14.194.10
+City: Thornton
+Region/State: Colorado
+Country: US
+Location (lat,long): 39.8680,-104.9719
+
+Options:
+1. Replay session exactly (original User-Agent, Language, Geo)
+2. Modify User-Agent manually
+3. Modify Geolocation manually
+4. Modify Language manually
+5. Modify User-Agent and Geolocation
+6. Modify User-Agent and Language
+7. Modify Geolocation and Language
+8. Modify all three (User-Agent, Language, Geolocation)
+9. Proceed without modifying anything
+Select an option (1-9):
+```
 
 ### 4. Replay Session to Extract Azure Tokens
 Make sure tokensmith is executable and installed in your system PATH.
