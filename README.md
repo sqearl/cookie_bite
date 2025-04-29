@@ -50,19 +50,15 @@ Run:
 ```bash
 node replay_to_browser_session.js
 ```
-This script gives you control over how closely you match the original intercepted session.
-
-Before replaying, you will be prompted to choose:
+The script first displays:
+The original captured session info (IP, city, country, User-Agent, Language)
+Your current machine’s public IP and location (using ipinfo.io)
+It then asks what modifications you'd like to make before proceeding to session replay:
 - Replay the session exactly as captured (original User-Agent, Language, Geolocation).
 - Modify the User-Agent manually to impersonate a different browser/device.
 - Modify the Geolocation manually (latitude and longitude) to simulate logging in from another physical location.
 - Modify the Accept-Language header to appear as if coming from a different locale.
 - Modify combinations of these attributes to trigger specific Azure security alerts based on anomaly detection.
-
-The script first displays:
-The original captured session info (IP, city, country, User-Agent, Language)
-Your current machine’s public IP and location (using ipinfo.io)
-It then asks what modifications you'd like to make before proceeding to session replay.
 
 By spoofing attributes like language, geolocation, and user-agent, you can test how Azure Conditional Access Policies and security monitoring tools respond to various anomaly conditions.
 
