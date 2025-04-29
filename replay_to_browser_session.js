@@ -32,49 +32,28 @@ async function getCurrentIPInfo() {
   console.log(`City: ${sessionData.city}`);
   console.log(`Region/State: ${sessionData.region}`);
   console.log(`Country: ${sessionData.country}`);
-  console.log(`Latitude: ${sessionData.coordinates?.latitude}`);
-  console.log(`Longitude: ${sessionData.coordinates?.longitude}`);
   console.log(`Language: ${sessionData.language || 'Not Set'}`);
 
-  // Fetch and show current session info
+  // Fetch and show current machine's info
   const currentInfo = await getCurrentIPInfo();
-  console.log('\n--- Your Current Info ---');
+  console.log('\n--- Your Current Machine Info ---');
   console.log(`IP Address: ${currentInfo.ip}`);
   console.log(`City: ${currentInfo.city}`);
   console.log(`Region/State: ${currentInfo.region}`);
   console.log(`Country: ${currentInfo.country}`);
-  console.log(`Location (lat,long): ${currentInfo.loc}`);
 
-  // Ask the user
+  // Ask user if they want to modify User-Agent
   console.log('\nOptions:');
-  console.log('1. Replay session exactly (original User-Agent, Language, Geo)');
+  console.log('1. Replay with original User-Agent)');
   console.log('2. Modify User-Agent manually');
-  console.log('3. Modify Geolocation manually');
-  console.log('4. Modify Language manually');
-  console.log('5. Modify User-Agent and Geolocation');
-  console.log('6. Modify User-Agent and Language');
-  console.log('7. Modify Geolocation and Language');
-  console.log('8. Modify all three (User-Agent, Language, Geolocation)');
-  console.log('9. Proceed without modifying anything');
 
-  const choice = await ask('Select an option (1-9): ');
+  const choice = await ask('Select an option (1-2): ');
 
   let userAgent = sessionData.userAgent || '';
-  let latitude = sessionData.coordinates?.latitude;
-  let longitude = sessionData.coordinates?.longitude;
-  let language = sessionData.language || 'en-US,en;q=0.9';
+  const language = sessionData.language || 'en-US,en;q=0.9';  // Always use the captured language
 
-  if (['2', '5', '6', '8'].includes(choice)) {
+  if (choice === '2') {
     userAgent = await ask('Enter the User-Agent string you want to use: ');
-  }
-
-  if (['3', '5', '7', '8'].includes(choice)) {
-    latitude = parseFloat(await ask('Enter the latitude: '));
-    longitude = parseFloat(await ask('Enter the longitude: '));
-  }
-
-  if (['4', '6', '7', '8'].includes(choice)) {
-    language = await ask('Enter the Accept-Language header you want to use (e.g., en-US,en;q=0.9): ');
   }
 
   rl.close();
@@ -91,20 +70,6 @@ async function getCurrentIPInfo() {
   await page.setExtraHTTPHeaders({
     'Accept-Language': language
   });
-
-  // Grant geolocation permission
-  await browser.defaultBrowserContext().overridePermissions(
-    "https://login.microsoftonline.com",
-    ["geolocation"]
-  );
-
-  // Set geolocation
-  if (latitude && longitude) {
-    await page.setGeolocation({ latitude, longitude });
-    console.log(`Geolocation set to lat: ${latitude}, lon: ${longitude}`);
-  } else {
-    console.log('No geolocation set.');
-  }
 
   // Set cookies
   await page.setCookie(...sessionData.cookies);
