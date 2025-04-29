@@ -67,6 +67,8 @@ It then asks what modifications you'd like to make before proceeding to session 
 By spoofing attributes like language, geolocation, and user-agent, you can test how Azure Conditional Access Policies and security monitoring tools respond to various anomaly conditions.
 
 ```bash
+--- Original Captured Session ---
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
 IP Address: 73.14.194.136
 City: Denver
 Region/State: Colorado
