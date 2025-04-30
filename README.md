@@ -48,7 +48,8 @@ Once you’ve captured the session data and saved it as session_dump.json, run:
 
 ```bash
 node replay_to_browser_session.js
-```bash
+```
+
 The script will:
 
 Display both the captured session metadata and your current machine’s metadata, including:
@@ -72,7 +73,7 @@ Unfamiliar sign-in properties
 Risky sign-ins and location anomalies
 Proxy detection or legacy browser logging
 
-``bash
+```bash
 % node replay_to_browser_session.js
 
 --- Original Captured Session ---
@@ -96,7 +97,7 @@ Select an option (1-2): 2
 Enter the User-Agent string you want to use: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:138.0) Gecko/20100101 Firefox/138.0
 Do you want to use a proxy? (y/n): n
 Replay session started in incognito window.
-```bash
+```
 
 ### 4. Replay Session to Extract Azure Tokens
 Make sure tokensmith is executable and installed in your system PATH.
