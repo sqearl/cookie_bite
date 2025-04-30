@@ -1,4 +1,4 @@
-# Cookie-Bite: Bypassing Azure MFA via Chrome Extension & Session Replay
+# Cookie-Bite: Testing Azure Defender Logging & Alerting with Session Replay
 
 This project is inspired by Varonis' original Cookie-Bite article, but takes a different direction: it focuses on using stolen session metadata to test how Microsoft Defender for Cloud Apps (formerly MCAS) logs and alerts on suspicious sign-ins.
 
