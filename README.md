@@ -53,24 +53,18 @@ node replay_to_browser_session.js
 The script will:
 
 Display both the captured session metadata and your current machine’s metadata, including:
-
-IP address
-
-City, Region, Country
-
-User-Agent and Language
+- IP address
+- City, Region, Country
+- User-Agent and Language
 
 Prompt you to:
 
-Replay with the original User-Agent, or override it manually
-
-Optionally route browser traffic through a proxy (e.g., http://127.0.0.1:8080 or socks5://...)
+- Replay with the original User-Agent, or override it manually
+- Optionally route browser traffic through a proxy (e.g., http://127.0.0.1:8080 or socks5://...)
 
 If a proxy is selected:
-
-The script will re-display both the modified and current session metadata
-
-Ask for confirmation before launching the replay
+- The script will re-display both the modified and current session metadata
+- Ask for confirmation before launching the replay
 
 Once launched, a Chrome window opens in incognito mode, with the cookies, headers, and environment spoofed to match (or deviate from) the original session.
 
