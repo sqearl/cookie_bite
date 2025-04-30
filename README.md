@@ -1,6 +1,8 @@
 # Cookie-Bite: Bypassing Azure MFA via Chrome Extension & Session Replay
 
-This project is inspired by Varonis' original Cookie-Bite article, expanding on the concept by automating session replay and attempting to bypass geolocation detections. It demonstrates how browser extensions can be weaponized to steal Microsoft Azure authentication cookies, exfiltrate them silently via a Google Form, and replay the session using Puppeteer and TokenSmith — effectively bypassing MFA and many behavioral security controls.
+This project is inspired by Varonis' original Cookie-Bite article, but takes a different direction: it focuses on using stolen session metadata to test how Microsoft Defender for Cloud Apps (formerly MCAS) logs and alerts on suspicious sign-ins.
+
+It demonstrates how browser extensions can be weaponized to steal Microsoft Azure authentication cookies, exfiltrate them silently via a Google Form, and then replay those sessions with modified environment metadata (e.g., IP, User-Agent, Accept-Language, proxy routing) — allowing defenders to observe how session anomalies are detected by Azure.
 
 ---
 
@@ -42,56 +44,59 @@ On a mac, launch the extension automatically with:
 ```
 
 ### 3. Replay Stolen Session to Browser
-After receiving the stolen session data:
+Once you’ve captured the session data and saved it as session_dump.json, run:
 
-Save the payload to a file called session_dump.json.
-
-Run:
 ```bash
 node replay_to_browser_session.js
-```
-The script first displays:
-The original captured session info (IP, city, country, User-Agent, Language)
-Your current machine’s public IP and location (using ipinfo.io)
-It then asks what modifications you'd like to make before proceeding to session replay:
-- Replay the session exactly as captured (original User-Agent, Language, Geolocation).
-- Modify the User-Agent manually to impersonate a different browser/device.
-- Modify the Geolocation manually (latitude and longitude) to simulate logging in from another physical location.
-- Modify the Accept-Language header to appear as if coming from a different locale.
-- Modify combinations of these attributes to trigger specific Azure security alerts based on anomaly detection.
-
-By spoofing attributes like language, geolocation, and user-agent, you can test how Azure Conditional Access Policies and security monitoring tools respond to various anomaly conditions.
-
 ```bash
+The script will:
+
+Display both the captured session metadata and your current machine’s metadata, including:
+IP address
+City, Region, Country
+User-Agent and Language
+
+Prompt you to:
+Replay with the original User-Agent, or override it manually
+Optionally route browser traffic through a proxy (e.g., http://127.0.0.1:8080 or socks5://...)
+
+If a proxy is selected:
+The script will re-display both the modified and current session metadata
+Ask for confirmation before launching the replay
+
+Once launched, a Chrome window opens in incognito mode, with the cookies, headers, and environment spoofed to match (or deviate from) the original session.
+Use this replay to test how Azure logs and flags the authentication, such as:
+
+Impossible travel detection
+Unfamiliar sign-in properties
+Risky sign-ins and location anomalies
+Proxy detection or legacy browser logging
+
+``bash
+% node replay_to_browser_session.js
+
 --- Original Captured Session ---
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36
-IP Address: 73.14.194.136
-City: Denver
+IP Address: 24.8.124.19
+City: Colorado Springs
 Region/State: Colorado
 Country: United States
-Latitude: 39.7394
-Longitude: -104.9836
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
 Language: en-US
 
---- Your Current Info ---
-IP Address: 73.14.194.10
-City: Thornton
-Region/State: Colorado
-Country: US
-Location (lat,long): 39.8680,-104.9719
+--- Your Current Machine Info ---
+IP Address: 82.221.107.187
+City: Grindavík
+Region/State: Southern Peninsula
+Country: IS
 
 Options:
-1. Replay session exactly (original User-Agent, Language, Geo)
+1. Replay with original User-Agent
 2. Modify User-Agent manually
-3. Modify Geolocation manually
-4. Modify Language manually
-5. Modify User-Agent and Geolocation
-6. Modify User-Agent and Language
-7. Modify Geolocation and Language
-8. Modify all three (User-Agent, Language, Geolocation)
-9. Proceed without modifying anything
-Select an option (1-9):
-```
+Select an option (1-2): 2
+Enter the User-Agent string you want to use: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:138.0) Gecko/20100101 Firefox/138.0
+Do you want to use a proxy? (y/n): n
+Replay session started in incognito window.
+```bash
 
 ### 4. Replay Session to Extract Azure Tokens
 Make sure tokensmith is executable and installed in your system PATH.
